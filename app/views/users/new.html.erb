@@ -24,7 +24,7 @@
         <i class="icon-ok icon-white"></i> Rol de Usuario
       <% end %>
       <br>
-      <%= form.select :permission, User.permissions.keys.map {|role| [role.titleize, role]}, {}, {class: "form-control" } %>
+      <%= form.select :permission, User.permissions.keys.map {|role| [get_user_role(role), role]}, {}, {class: "form-control" } %>
     </div>
     <div>
       <%= form.hidden_field :password, :value => Devise.friendly_token.first(8) %>
@@ -40,6 +40,5 @@
   </div>
   <br>
   <%= link_to 'Regresar', users_path %>
-  
-</div>
 
+</div>

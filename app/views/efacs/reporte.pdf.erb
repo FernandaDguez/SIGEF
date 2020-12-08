@@ -15,28 +15,28 @@
         <hr>
 
         <h2>Información general</h2>
-        
+
         <p>
             <strong>
-                Responsable: 
+                Responsable:
             </strong>
             <%= @efac.responsible_name %>
         </p>
         <p>
             <strong>
-                Instancia responsable: 
+                Instancia responsable:
             </strong>
             <%= User.find(@efac.instance_id).name  %>
         </p>
         <p>
             <strong>
-                Duración: 
+                Duración:
             </strong>
             <%= @efac.duration  %> horas
         </p>
         <p>
             <strong>
-                Cuota: 
+                Cuota:
             </strong>
             $<%= @efac.fee %>.00 MXN
         </p>
@@ -52,21 +52,21 @@
         <h2>Información del evento formativo</h2>
         <p>
             <strong>
-                Objetivos: 
+                Objetivos:
             </strong>
             <br>
             <%= @efac.objectives  %>
         </p>
         <p>
             <strong>
-                Requisitos de participación: 
+                Requisitos de participación:
             </strong>
             <br>
             <%= @efac.participation_requirements %>
         </p>
         <p>
             <strong>
-                Requisitos de acreditación: 
+                Requisitos de acreditación:
             </strong>
             <br>
             <%= @efac.acreditation_requirements %>
@@ -96,20 +96,26 @@
             <br>
             <%= @efac.utility %>
         </p>
-        
 
         <br>
-        <h2>Información del instructor</h2>
+        <h2>Información de los instructores</h2>
+        
+        <% @efac.instructors.each do |inst| %>
+          Nombre:
+          <i>
+            <%= inst.name %>
+          </i>
+          <br>
+          Experiencia:
+          <i>
+            <%= inst.experience %>
+          </i>
+          <br><hr>
+        <% end %>
 
-        <p>
-            <strong>
-                Nombre del instructor: 
-            </strong>
-            <%= @efac.instructor_name %>
-        </p>
     </div>
 
-        
+
 
 </body>
 </html>

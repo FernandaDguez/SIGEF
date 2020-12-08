@@ -1,4 +1,4 @@
-<%= form_with(model: efac, local: true) do |form| %>
+<%= form_for @efac do |form| %>
   <% if efac.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(efac.errors.count, "error") %> prohibited this efac from being saved:</h2>
@@ -10,118 +10,160 @@
       </ul>
     </div>
   <% end %>
+<br><br>
+  <hr>
+  <br>
+  <div style="width: 70%;">
 
   <div>
     <%=form.label "Nombre del Evento Formativo:"%>
-    <%=form.text_field :name%>
-  </div> 
-
+    <br>
+    <%=form.text_field :name, class: "form-control"%>
+  </div>
+  <br>
 
   <div>
     <%=form.label "Tipo de evento:"%>
-    <%= form.select :content_type, options_for_select([ "Taller", "Curso", "Diplomado", "Programa especial"]), id: 'tipo'%>
+    <br>
+    <%= form.select :content_type,  options_for_select([ "Taller", "Curso", "Diplomado", "Programa especial"]), {}, { class: "form-control", id: 'tipo' }%>
   </div>
+  <br>
 
   <div>
     <%=form.label "Instancia responsable:"%>
-    <%= form.select :instance_id, User.where(permission: "instance").collect {|u| [u.name, u.id]}, id: 'tipo' %>
+    <br>
+    <%= form.select :instance_id, User.where(permission: "instance").collect {|u| [u.name, u.id]}, {}, {class: "form-control", id: 'tipo'} %>
   </div>
+  <br>
 
   <div>
     <%=form.label "Modalidad:"%>
-    <%= form.select :modality, options_for_select(["Presencial", "En línea", "Mixta"]), id: 'tipo'%>
+    <br>
+    <%= form.select :modality, options_for_select(["Presencial", "En línea", "Mixta"]), {}, { class: "form-control", id: 'tipo' }%>
   </div>
-  
 
+  <br>
   <div>
     <%=form.label "Duración (Horas)"%>
-    <%=form.number_field :duration%>
-  </div> 
+    <br>
+    <%=form.number_field :duration, class: "form-control"%>
+  </div>
+  <br>
 
 
   <div>
     <%=form.label "Cuota"%>
-    <%=form.number_field :fee%>
+    <br>
+    <%=form.number_field :fee, class: "form-control"%>
   </div>
+  <br>
 
-  <div>
-    <%=form.label "Instructor"%>
-    <%=form.text_field :instructor_name%>
-  </div>
+  <div id="instructor-field-set-container">
+  <%= form.fields_for :instructors do |f| %>
+      <fieldset id="<%= f.index.to_s %>">
+        <div>
+          <%= f.label "Nombre Instructor" %>
+          <%= f.text_field :name, class: "form-control"%>
+        </div>
+        <br>
 
-  <div>
-    <%=form.label "Experiencia del instructor"%>
-    <%=form.text_field :instructor_experience%>
-  </div>
+        <div>
+          <%= f.label "Experiencia del Instructor" %>
+        </div>
+        <div>
+          <%= f.text_area :experience, :cols => 40, :rows => 10, class: "form-control" %>
+        </div>
+        <br>
 
-  <div>
-    <%=form.label "Currículum sintético del instructor (PDF)"%>
-    <%=form.file_field :instructor_resumee%>
-  </div>
+        <div>
+          <%= f.label "Currículum del Instructor" %>
+        </div>
+        <div>
+          <%= f.file_field :resume, class: "form-control-file" %>
+        </div>
+          <%= content_tag('a', 'Borrar Instructor',
+                          id: "del-"+f.index.to_s,
+                          class: "badge badge-danger align-self-center") %>
+      </fieldset>
+  <% end %>
+</div>
+<br>
 
+<div class="actions">
+  <button type="button" id="addInstructor"> Agregar Instructor </button>
+</div>
+<br>
 
   <div>
     <%=form.label "Programa:"%>
   </div>
   <div>
-    <%= form.text_area :content, :cols => 40, :rows => 10%>
+    <%= form.text_area :content, :cols => 40, :rows => 10, class: "form-control"%>
   </div>
+  <br>
 
 
   <div>
     <%=form.label "Objetivos:"%>
   </div>
   <div>
-    <%= form.text_area :objectives, :cols => 40, :rows => 10%>
+    <%= form.text_area :objectives, :cols => 40, :rows => 10, class: "form-control"%>
   </div>
+  <br>
 
 
   <div>
     <%=form.label "Referencias teóricas y metodológicas:"%>
   </div>
   <div>
-    <%= form.text_area :references, :cols => 40, :rows => 10%>
+    <%= form.text_area :references, :cols => 40, :rows => 10, class: "form-control"%>
   </div>
+  <br>
 
 
   <div>
     <%=form.label "Método de evaluación:"%>
   </div>
   <div>
-    <%= form.text_area :eval_method, :cols => 40, :rows => 10%>
+    <%= form.text_area :eval_method, :cols => 40, :rows => 10, class: "form-control"%>
   </div>
-  
+  <br>
+
 
   <div>
     <%=form.label "Requisitos de acreditación"%>
   </div>
   <div>
-    <%= form.text_area :acreditation_requirements, :cols => 40, :rows => 10%>
+    <%= form.text_area :acreditation_requirements, :cols => 40, :rows => 10, class: "form-control"%>
   </div>
+  <br>
 
 
   <div>
     <%=form.label "Utilidad y oportunidad del evento"%>
   </div>
   <div>
-    <%= form.text_area :utility, :cols => 40, :rows => 10%>
+    <%= form.text_area :utility, :cols => 40, :rows => 10, class: "form-control"%>
   </div>
-  
+  <br>
+
 
   <div>
     <%=form.label "Requisitos de participación"%>
   </div>
   <div>
-    <%= form.text_area :participation_requirements, :cols => 40, :rows => 10%>
+    <%= form.text_area :participation_requirements, :cols => 40, :rows => 10, class: "form-control"%>
   </div>
+  <br>
 
 
   <div>
     <%=form.label "Condiciones operativas"%>
   </div>
   <div>
-    <%= form.text_area :operative_conditions, :cols => 40, :rows => 10%>
+    <%= form.text_area :operative_conditions, :cols => 40, :rows => 10, class: "form-control"%>
   </div>
+  <br>
 
 
 
@@ -129,20 +171,58 @@
     <%=form.label "Recursos y materiales didácticos de apoyo:"%>
   </div>
   <div>
-    <%= form.text_area :resources, :cols => 40, :rows => 10%>
+    <%= form.text_area :resources, :cols => 40, :rows => 10, class: "form-control"%>
   </div>
+  <br>
 
 
   <div>
     <%=form.label "Capacidad de autofinanciamiento o disponibilidad de recursos"%>
   </div>
+  <br>
   <div>
-    <%= form.text_area :resources_availability, :cols => 40, :rows => 10%>
+    <%= form.text_area :resources_availability, :cols => 40, :rows => 10, class: "form-control"%>
   </div>
-
-
+  <br>
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit 'Guardar EFAC', class: "btn btn-primary" %>
   </div>
-  
 <% end %>
+</div>
+
+
+<br>
+<script>
+  const createButton = document.getElementById("addInstructor");
+  createButton.addEventListener("click", () => {
+    //console.log($("#instructor-field-set-container").children("fieldset").last()[0]);
+
+    const lastId = $("#instructor-field-set-container").children("fieldset").last()[0].id;
+
+    const newId = parseInt(lastId, 10) + 1;
+
+    const newFieldset = document.querySelector('[id="0"]').outerHTML.replace(/0/g,newId);
+
+    document.querySelector("#instructor-field-set-container").insertAdjacentHTML(
+        "beforeend", newFieldset
+    );
+  });
+
+  function removeField() {
+    document.body.addEventListener("click", (e) => {
+      //console.log(e);
+      //console.log(e.target.nodeName === "A");
+      //console.log(e.target.parentNode.previousElementSibling);
+      //console.log(e.target.parentNode);
+      if (e.target.nodeName === "A" &&
+          e.target.parentNode.previousElementSibling) {
+        console.log('ola');
+        /* to prevent from removing the first fieldset as it's previous sibling is null */
+        e.target.parentNode.remove();
+        let id_remove = e.target.parentNode.id;
+        $('#efac_instructors_attributes_'+String(id_remove)+'_id').remove();
+      }
+    });
+  }
+  removeField();
+</script>

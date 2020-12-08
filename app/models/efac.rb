@@ -1,9 +1,10 @@
 class Efac < ApplicationRecord
-    has_one_attached :instructor_resumee
     belongs_to :user
+    has_many :instructors, inverse_of: :efac, dependent: :destroy
+    accepts_nested_attributes_for :instructors, allow_destroy: true
 
     enum state: [ :editing, :waiting, :aproved, :rejected ]
-    
+
     validates :name, presence: true
     validates :modality, presence: true
     validates :objectives, presence: true
@@ -18,11 +19,8 @@ class Efac < ApplicationRecord
     validates :operative_conditions, presence: true
     validates :resources_availability, presence: true
     validates :fee, presence: true
-    validates :instructor_name, presence: true
-    validates :instructor_experience, presence: true
     validates :content, presence: true
-    validates :instructor_resumee, presence:true
-    
+
     before_save do
         if self.fee < 0
             errors.add(:error, ". Cuota inválida.")

@@ -11,25 +11,25 @@ class EfacsController < ApplicationController
     elsif current_user.instance?
       @efacs = Efac.where(sent: true, instance_id: current_user.id)
     end
-    
+
   end
 
   # GET /efacs/1
   # GET /efacs/1.json
   def show
-    respond_to do |format| 
-      format.html 
+    respond_to do |format|
+      format.html
       format.json
-      format.pdf { 
-        render template: 'efacs/reporte', 
-        pdf: 'Reporte' 
+      format.pdf {
+        render template: 'efacs/reporte',
+        pdf: 'Reporte'
       }
-    end 
+    end
   end
 
   # GET /efacs/new
   def new
-    @efac = Efac.new
+    @efac = Efac.new; @efac.instructors.build
   end
 
   # GET /efacs/1/edit
@@ -121,7 +121,7 @@ class EfacsController < ApplicationController
 
   def show_aproved
     @efacs = Efac.where(state: "aproved", instance_id: current_user.id)
-  end 
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -129,11 +129,35 @@ class EfacsController < ApplicationController
       @efac = Efac.find(params[:id])
     end
 
-
-
     # Only allow a list of trusted parameters through.
     def efac_params
-      params.require(:efac).permit(:name, :modality, :objectives, :content_type, :eval_method, :duration, :resources, :references, :utility, :participation_requirements, :acreditation_requirements, :operative_conditions, :resources_availability, :fee, :instructor_name, :instructor_experience, :instructor_resumee, :content, :instance_id, :state)
+      parameters = params.require(:efac).permit(:name, :modality, :objectives, :content_type,
+                                   :eval_method, :duration, :resources,
+                                   :references, :utility,
+                                   :participation_requirements,
+                                   :acreditation_requirements,
+                                   :operative_conditions,
+                                   :resources_availability,
+                                   :fee, :content, :instance_id, :state,
+                                   instructors_attributes: [:name, :experience,
+                                                            :id, :_destroy,
+                                                            :resume],
+                                  )
 
+      if @efac then
+        missing_indexes = (0...@efac.instructors.length).to_a
+        parameters["instructors_attributes"].each do |k, param|
+          missing_indexes.delete(k.to_i)
+        end
+        ActionController::Parameters.permit_all_parameters = true
+        missing_indexes.each do |index|
+          param = ActionController::Parameters.new(id: @efac.instructors[index].id,
+                                                  _destroy: true)
+          parameters["instructors_attributes"][index] = param
+        end
+        ActionController::Parameters.permit_all_parameters = false
+      end
+
+      return parameters
     end
 end

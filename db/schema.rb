@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_07_072302) do
+ActiveRecord::Schema.define(version: 2020_12_08_030047) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -48,10 +48,8 @@ ActiveRecord::Schema.define(version: 2020_12_07_072302) do
     t.string "operative_conditions"
     t.string "resources_availability"
     t.integer "fee"
-    t.string "instructor_name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "instructor_experience"
     t.string "content"
     t.integer "user_id", null: false
     t.boolean "sent"
@@ -61,6 +59,15 @@ ActiveRecord::Schema.define(version: 2020_12_07_072302) do
     t.string "reason"
     t.index ["instance_id"], name: "index_efacs_on_instance_id"
     t.index ["user_id"], name: "index_efacs_on_user_id"
+  end
+
+  create_table "instructors", force: :cascade do |t|
+    t.string "name"
+    t.string "experience"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "efac_id", null: false
+    t.index ["efac_id"], name: "index_instructors_on_efac_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -81,4 +88,5 @@ ActiveRecord::Schema.define(version: 2020_12_07_072302) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "efacs", "users"
+  add_foreign_key "instructors", "efacs"
 end

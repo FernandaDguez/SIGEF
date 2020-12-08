@@ -55,42 +55,53 @@
       <%= @efac.resources_availability %>
     </p>
     <br>
+    <strong>Instructores:</strong>
+    <br><hr>
+    <% @efac.instructors.each do |inst| %>
+      Nombre:
+      <i>
+        <%= inst.name %>
+      </i>
+      <br>
+      Experiencia:
+      <i>
+        <%= inst.experience %>
+      </i>
+      <br>
+      Currículum:
+      <i>
+        <% if inst.resume then %>
+          <%= link_to "Archivo Adjunto", inst.resume, target: :_blank %>
+        <% else %>
+          No se ha adjuntado archivo
+        <% end %>
+      </i>
+      <br><hr>
+    <% end %>
+    <br>
     <p>
       <strong>Cuota:</strong>
-      $ <%= @efac.fee %>.00 MXN
+      $
+      <%= @efac.fee %>
     </p>
-
-    <p>
-      <strong>Nombre del instructor:</strong>
-      <%= @efac.instructor_name %>
+    <strong>Estado:</strong>
+    <% if @efac.aproved? %>
+    <p style="color: green">
+      Aprobado
     </p>
-
-    <p>
-      <strong>Curriculum del instructor:</strong>
-      <%= link_to 'Descargar Archivo', @efac.instructor_resumee, target: :_blank %>
+    <% elsif @efac.rejected? %>
+    <p style="color: red">
+      Rechazado
     </p>
-    <br>
-
-    <p>
-      <strong>Estado:</strong>
-      <% if @efac.aproved? %>
-      <p style="color: green">
-        Aprobado
-      </p>
-      <% elsif @efac.rejected? %>
-      <p style="color: red">
-        Rechazado
-      </p>
-      <% elsif @efac.waiting? %>
-      <p style="color: var(--mainBlue)">
-        Esperando
-      </p>
-      <% else %>
-      <p style="color: var(--mainBlue)">
-        Editando
-      </p>
-      <% end %>
+    <% elsif @efac.waiting? %>
+    <p style="color: var(--mainBlue)">
+      Esperando
     </p>
+    <% else %>
+    <p style="color: var(--mainBlue)">
+      Editando
+    </p>
+    <% end %>
 
     <% if @efac.reason %>
       <p>
